@@ -11,16 +11,18 @@ interface NeonNoirTheme {
   vfxClass: string;
 }
 
+const STUDIO_THEME: NeonNoirTheme = {
+  primaryColor: '#FFB000',
+  glowIntensity: '0px 0px 5px rgba(255, 176, 0, 0.3)',
+  gridOpacity: 1,
+  fontFamily: "'Inter', sans-serif",
+  vfxClass: 'vfx-clean',
+};
+
 export const useNeonNoir = () => {
   const { telemetry, activeAgentOverride } = useHalSocket();
   const [uiState, setUiState] = useState<UIState>('STUDIO');
-  const [theme, setTheme] = useState<NeonNoirTheme>({
-    primaryColor: '#FFB000',
-    glowIntensity: '0px 0px 10px rgba(255, 176, 0, 0.5)',
-    gridOpacity: 1,
-    fontFamily: "'Inter', sans-serif",
-    vfxClass: 'vfx-clean',
-  });
+  const [theme, setTheme] = useState<NeonNoirTheme>(STUDIO_THEME);
 
   useEffect(() => {
     if (telemetry.panicRelayEngaged) {
@@ -65,13 +67,7 @@ export const useNeonNoir = () => {
       });
     } else {
       setUiState('STUDIO');
-      setTheme({
-        primaryColor: '#FFB000',
-        glowIntensity: '0px 0px 5px rgba(255, 176, 0, 0.3)',
-        gridOpacity: 1,
-        fontFamily: "'Inter', sans-serif",
-        vfxClass: 'vfx-clean',
-      });
+      setTheme(STUDIO_THEME);
     }
   }, [telemetry, activeAgentOverride]);
 

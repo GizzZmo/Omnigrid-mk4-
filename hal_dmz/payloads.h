@@ -1,12 +1,12 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
-#include <string_view>
 
 struct ParameterUpdate {
-    std::string_view node_id;
-    std::string_view param_id;
-    float value;
+    std::array<char, 32> node_id{};
+    std::array<char, 32> param_id{};
+    float value = 0.0f;
 };
 
 struct TelemetryData {

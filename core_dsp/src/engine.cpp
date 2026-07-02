@@ -1,5 +1,7 @@
 #include "engine.h"
 
+#include <algorithm>
+
 #include "hal_dmz/lock_free_queue.h"
 #include "hardware/gpio.h"
 
@@ -16,7 +18,7 @@ void AudioEngine::process_hardware_interrupt(float* in_buffer, float* out_buffer
 
     ParameterUpdate update;
     while (dmz_rx_queue.pop(update)) {
-        active_graph.set_parameter(update.node_id, update.param_id, update.value);
+        active_graph.set_parameter(update.node_id.data(), update.param_id.data(), update.value);
     }
 
     active_graph.process_block(in_buffer, out_buffer, num_samples);
@@ -24,7 +26,7 @@ void AudioEngine::process_hardware_interrupt(float* in_buffer, float* out_buffer
     TelemetryData t_data;
     t_data.timestamp = HardwareTimer::get_ticks();
     t_data.rms_level = calculate_rms(out_buffer, num_samples);
-    t_data.dsp_load_percent = calculate_execution_time() / FRAME_TIME_BUDGET_MS * 100.0f;
+    t_data.dsp_load_percent = std::min(calculate_execution_time() / FRAME_TIME_BUDGET_MS * 100.0f, 100.0f);
     t_data.core_temp = HardwareSensors::read_temp();
 
     dmz_tx_queue.push(t_data);

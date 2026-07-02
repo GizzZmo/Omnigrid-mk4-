@@ -27,7 +27,7 @@ class GhostCoderAgent:
             {
                 "node_id": "SUB_HARMONIC_TUNNEL",
                 "param_id": "ROUTE_ID",
-                "value": 0xF3,
+                "value": 243.0,  # Route IDs are transported as numeric scalar payloads.
                 "signature": self.signature,
             }
         )
