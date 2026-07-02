@@ -1,5 +1,6 @@
 import random
 from dataclasses import dataclass, field
+from typing import TypedDict
 
 
 @dataclass
@@ -23,6 +24,12 @@ class TelemetryStream:
 
 
 class ControlQueue:
-    def push_update(self, payload: dict) -> None:
+    class UpdatePayload(TypedDict):
+        node_id: str
+        param_id: str
+        value: float
+        signature: str
+
+    def push_update(self, payload: UpdatePayload) -> None:
         # Scaffold bridge: this local stub accepts updates but does not forward them yet.
         _ = payload

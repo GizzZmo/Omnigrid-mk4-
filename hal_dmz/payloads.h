@@ -1,10 +1,11 @@
 #pragma once
 
 #include <cstdint>
+#include <string_view>
 
 struct ParameterUpdate {
-    const char* node_id;
-    const char* param_id;
+    std::string_view node_id;
+    std::string_view param_id;
     float value;
 };
 

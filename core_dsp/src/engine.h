@@ -11,7 +11,7 @@ enum TelemetryEvent {
 
 class Graph {
 public:
-    void set_parameter(const char*, const char*, float) {}
+    void set_parameter(std::string_view, std::string_view, float) {}
     void process_block(float*, float*, std::size_t) {}
 };
 
