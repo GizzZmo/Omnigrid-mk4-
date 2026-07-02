@@ -31,7 +31,13 @@ jobs:
         run: |
           cd glass_ui
           npm install
-          npm run dev | tee ../ui-dev.log
+          set +e
+          timeout 30s npm run dev | tee ../ui-dev.log
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ] && [ "$status" -ne 124 ]; then
+            exit "$status"
+          fi
 
       - name: Upload DSP artifact
         uses: actions/upload-artifact@v4
