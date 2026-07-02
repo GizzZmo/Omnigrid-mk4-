@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure DSP build
+        run: |
+          cmake -S core_dsp -B core_dsp/build
+
+      - name: Build DSP library
+        run: |
+          cmake --build core_dsp/build
+
+      - name: Validate Python sources
+        run: |
+          python -m py_compile ai_agents/src/*.py
+
+      - name: Validate Glass UI script
+        run: |
+          cd glass_ui
+          npm install
+          npm run dev | tee ../ui-dev.log
+
+      - name: Upload DSP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-dsp-build
+          path: |
+            core_dsp/build/libcore_dsp.a
+            core_dsp/build/CMakeCache.txt
+
+      - name: Upload UI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: glass-ui-log
+          path: ui-dev.log
