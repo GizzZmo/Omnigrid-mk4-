@@ -24,4 +24,5 @@ class TelemetryStream:
 
 class ControlQueue:
     def push_update(self, payload: dict) -> None:
+        # Scaffold bridge: this local stub accepts updates but does not forward them yet.
         _ = payload

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libcore_dsp.a CMakeFiles/core_dsp.dir/src/engine.cpp.o CMakeFiles/core_dsp.dir/src/queues.cpp.o
+/usr/bin/ranlib libcore_dsp.a

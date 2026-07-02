@@ -5,6 +5,7 @@
 
 extern ControlQueue<ParameterUpdate, 1024> dmz_rx_queue;
 extern TelemetryQueue<TelemetryData, 1024> dmz_tx_queue;
+constexpr float FRAME_TIME_BUDGET_MS = 0.66f;
 
 void AudioEngine::process_hardware_interrupt(float* in_buffer, float* out_buffer, std::size_t num_samples) {
     if (GPIO_ReadPin(PIN_PANIC_RELAY) == HIGH) {
@@ -23,7 +24,7 @@ void AudioEngine::process_hardware_interrupt(float* in_buffer, float* out_buffer
     TelemetryData t_data;
     t_data.timestamp = HardwareTimer::get_ticks();
     t_data.rms_level = calculate_rms(out_buffer, num_samples);
-    t_data.dsp_load_percent = calculate_execution_time() / 0.66f * 100.0f;
+    t_data.dsp_load_percent = calculate_execution_time() / FRAME_TIME_BUDGET_MS * 100.0f;
     t_data.core_temp = HardwareSensors::read_temp();
 
     dmz_tx_queue.push(t_data);
