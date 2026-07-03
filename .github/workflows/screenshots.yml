@@ -1,0 +1,66 @@
+name: Generate Screenshots
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - README.md
+      - .github/workflows/screenshots.yml
+
+permissions:
+  contents: read
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build screenshot source page
+        run: |
+          mkdir -p artifacts/screenshots
+          cat > artifacts/screenshots/index.html <<'EOF'
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <title>Omni-Grid Mk-IV CI Snapshot</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 32px; background: #0b0f19; color: #e6edf3; }
+              .card { border: 1px solid #2f81f7; border-radius: 12px; padding: 20px; max-width: 860px; }
+              h1 { margin-top: 0; color: #79c0ff; }
+              p { line-height: 1.5; }
+              code { color: #ffa657; }
+            </style>
+          </head>
+          <body>
+            <div class="card">
+              <h1>Omni-Grid Mk-IV Artifact Snapshot</h1>
+              <p>This page is generated during GitHub Actions and captured as a screenshot artifact.</p>
+              <p><strong>Repository:</strong> <code>${{ github.repository }}</code></p>
+              <p><strong>Commit:</strong> <code>${{ github.sha }}</code></p>
+              <p><strong>Run Number:</strong> <code>${{ github.run_number }}</code></p>
+            </div>
+          </body>
+          </html>
+          EOF
+
+      - name: Install Playwright Chromium
+        run: npx -y playwright@1.54.1 install --with-deps chromium
+
+      - name: Capture screenshot
+        run: |
+          npx -y playwright@1.54.1 screenshot \
+            --browser=chromium \
+            "file://${{ github.workspace }}/artifacts/screenshots/index.html" \
+            "artifacts/screenshots/ci-snapshot.png"
+
+      - name: Upload screenshot artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-screenshots
+          path: artifacts/screenshots

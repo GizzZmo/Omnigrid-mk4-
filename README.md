@@ -1,3 +1,6 @@
+![CI](https://github.com/GizzZmo/Omnigrid-mk4-/actions/workflows/ci.yml/badge.svg)
+![Generate Screenshots](https://github.com/GizzZmo/Omnigrid-mk4-/actions/workflows/screenshots.yml/badge.svg)
+
 Let's execute both. We will script the `GhostCoder` to inject its chaos, and then build the React hooks to ensure the Glass UI renders that chaos beautifully.
 
 ### 1. The Anomaly: `ai_agents/src/ghost_coder.py`
